@@ -97,27 +97,61 @@ value = 1.0
 tick_count = 33
 ticks_on_borders = true
 
+[node name="VSlider" type="VSlider" parent="CanvasLayer"]
+margin_left = 113.0
+margin_top = 55.0
+margin_right = 202.0
+margin_bottom = 810.0
+min_value = 1.0
+max_value = 50.0
+value = 18.0
+
 [node name="LogPanel" type="Panel" parent="CanvasLayer"]
 modulate = Color( 1, 1, 1, 0.686275 )
-margin_left = 1242.0
+margin_left = 1296.0
 margin_top = 44.0
-margin_right = 1599.0
+margin_right = 1588.0
 margin_bottom = 733.0
 
 [node name="TabContainer" type="TabContainer" parent="CanvasLayer/LogPanel"]
-margin_right = 357.0
+margin_right = 289.0
 margin_bottom = 689.0
 tab_align = 0
+tabs_visible = false
 
 [node name="star" type="Label" parent="CanvasLayer/LogPanel/TabContainer"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 4.0
-margin_top = 32.0
+margin_top = 8.0
 margin_right = -4.0
 margin_bottom = -4.0
 text = "star"
 
+[node name="ObjectsPanel" type="Panel" parent="CanvasLayer"]
+margin_left = 6.0
+margin_top = 52.0
+margin_right = 145.0
+margin_bottom = 812.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/ObjectsPanel"]
+margin_top = 6.0
+margin_right = 135.0
+margin_bottom = 755.0
+custom_constants/separation = -3
+
+[node name="Button" type="Button" parent="CanvasLayer/ObjectsPanel/VBoxContainer"]
+margin_right = 135.0
+margin_bottom = 20.0
+custom_colors/font_color_focus = Color( 0.945098, 1, 0, 1 )
+custom_colors/font_color = Color( 0.945098, 1, 0, 1 )
+custom_colors/font_color_hover = Color( 0.945098, 1, 0, 1 )
+text = "star"
+flat = true
+align = 0
+
 [connection signal="draw" from="." to="." method="_on_Game_draw"]
 [connection signal="value_changed" from="CanvasLayer/HSlider" to="." method="_on_HSlider_value_changed"]
+[connection signal="value_changed" from="CanvasLayer/VSlider" to="." method="_on_VSlider_value_changed"]
 [connection signal="tab_changed" from="CanvasLayer/LogPanel/TabContainer" to="." method="_on_TabContainer_tab_changed"]
+[connection signal="pressed" from="CanvasLayer/ObjectsPanel/VBoxContainer/Button" to="." method="_on_Button_pressed"]

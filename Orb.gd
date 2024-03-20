@@ -12,7 +12,9 @@ var ptCtr = 0
 var line2Dpath
 var traj
 var traj2
+var traj3
 var centerObj
+var outerPlanetObj
 
 func _ready():
 	#move path LINE to top level game node
@@ -32,6 +34,13 @@ func _ready():
 	traj2.name = name + '-traj2' 
 	remove_child(traj2)
 	centerObj.call_deferred("add_child",traj2)
+
+	#move path traj3 to outer planet - TEST
+	outerPlanetObj = get_parent().get_node('Star/MassBody2') #findBestCenter()
+	traj3 = $Trajectory3
+	traj3.name = name + '-traj3' 
+	remove_child(traj3)
+	outerPlanetObj.call_deferred("add_child",traj3)
 	
 func moveTraj2Center(newObjCenter):
 	if (newObjCenter != centerObj):
@@ -39,14 +48,21 @@ func moveTraj2Center(newObjCenter):
 		centerObj = newObjCenter # findBestCenter()
 		centerObj.call_deferred("add_child",traj2)
 		
+func moveTraj3Center(newOuterPlanetCenter):
+	if (newOuterPlanetCenter != outerPlanetObj):
+		outerPlanetObj.remove_child(traj3)
+		outerPlanetObj = newOuterPlanetCenter # findBestCenter()
+		outerPlanetObj.call_deferred("add_child",traj3)		
+		
 func clean_queue_free():
 	get_parent().removeTab(name)
 	get_parent().removeTab(name + '-traj' )
 	get_parent().removeTab(name + '-traj2' )
+	get_parent().removeTab(name + '-traj3' )
 	line2Dpath.queue_free()
 	traj.queue_free()
 	traj2.queue_free()
-#	node2Dorbit.queue_free()
+	traj3.queue_free()
 	queue_free()
 	
 var lastDistanceToStar
@@ -176,6 +192,27 @@ func _physics_process(delta):
 #			traj2.orbitalVelocity = -1*orbitalVelocity + get_parent().get_node('Star').get_node('MassBody').orbitalVelocity
 			traj2.solveFromStateVectors()	
 			traj2.update()	
+
+		# possible orbit - around planet or moon
+		if traj3.is_inside_tree():
+			
+#			moveTraj3Center(findBestCenter())		
+#			moveTraj2Center(get_parent().get_node('Star').get_node('MassBody'))		
+			
+			traj3.orbitColor = Color8(Color.orange.r8,Color.orange.g8,Color.orange.b8,30)
+			traj3.position = Vector2.ZERO
+			traj3.mass = self_mass
+			traj3.mass2 = outerPlanetObj.self_mass
+#			traj3.mass2 = get_parent().get_node('Star').get_node('MassBody').self_mass
+			traj3.setG(get_parent().get_node('Star').getBigG())
+			traj3.orbitalPosition = outerPlanetObj.to_local(global_position)
+#			traj3.orbitalPosition = get_parent().get_node('Star').get_node('MassBody').to_local(global_position)
+
+			# TODO:  make dynamic - because orbital velocity stacks?
+			traj3.orbitalVelocity = -1*orbitalVelocity + outerPlanetObj.orbitalVelocity
+#			traj3.orbitalVelocity = -1*orbitalVelocity + get_parent().get_node('Star').get_node('MassBody').orbitalVelocity
+			traj3.solveFromStateVectors()	
+			traj3.update()	
 
 func findBestCenter():
 	return get_parent().get_node('Star').get_node('MassBody')	

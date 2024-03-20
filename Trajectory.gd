@@ -256,7 +256,7 @@ func solveFromTrue(bypass_signals=false):
 		meanAnomalyMotion = (2*PI) / orbitalPeriod
 	
 	# hack to fix parabolic divide by zero
-	if !is_equal_approx(eccentricty,1):
+	if !is_equal_approx(eccentricty,1) && (1+eccentricty*cos(deg2rad(trueAnomaly))) !=0:
 		orbitalDistance=semiMajorAxis*((1-(pow(eccentricty,2)))/(1+eccentricty*cos(deg2rad(trueAnomaly))))  
 	else:
 		orbitalDistance=semiMajorAxis
@@ -371,8 +371,8 @@ func _draw():
 
 	draw_line(orbitalPosition,orbitalPosition+orbitalVelocity,Color.green,2.0) # veloc
 	
-	draw_line(orbitalPosition,orbitalPosition+orbitalVelocityf1,Color.blue,1.0)  
-	draw_line(orbitalPosition,orbitalPosition+orbitalVelocityf2,Color.red,1.0)  
+#	draw_line(orbitalPosition,orbitalPosition+orbitalVelocityf1,Color.blue,1.0)  
+#	draw_line(orbitalPosition,orbitalPosition+orbitalVelocityf2,Color.red,1.0)  
 	
 	draw_line(orbitalPosition,orbitalPosition+orbitalVelocityNormal,Color.cyan,1.0) # veloc norm
 
